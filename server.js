@@ -10,11 +10,19 @@ const app = express();
 const PORT = 5000;
 
 // Middleware
-app.use(
-  cors({
-    origin: ["https://t2-i-frontend.vercel.app/"],
-  })
-);
+const allowedOrigins = [
+  'https://t2-i-frontend.vercel.app', // Your frontend URL
+  // Add more allowed origins here as needed
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  }
+}));
 
 app.use(bodyParser.json());
 
